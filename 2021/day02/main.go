@@ -39,11 +39,16 @@ func main() {
 	defer fd.Close()
 
 	br := bufio.NewScanner(fd)
-	submarine := SubmarinWithAim{}
+	submarineWithAim := SubmarinWithAim{}
+	submarineWithoutAim := SubmarineWithoutAim{}
 	for br.Scan() {
 		line := br.Text()
-		submarine.MoveSubmarine(line)
+		submarineWithoutAim.MoveSubmarine(line)
+		submarineWithAim.MoveSubmarine(line)
 	}
 
-	fmt.Printf("Location of submarine is %d %d %d\n", submarine.HorizontalPosition, submarine.Depth, submarine.Destination())
+	fmt.Println("Part 01")
+	fmt.Printf("Location of submarine is %d %d %d\n", submarineWithoutAim.HorizontalPosition, submarineWithoutAim.Depth, submarineWithoutAim.Destination())
+	fmt.Println("Part 02")
+	fmt.Printf("Location of submarine is %d %d %d\n", submarineWithAim.HorizontalPosition, submarineWithAim.Depth, submarineWithAim.Destination())
 }

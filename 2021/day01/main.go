@@ -1,12 +1,8 @@
 package main
 
 import (
-	"bufio"
+	"2021/util"
 	"fmt"
-	"io"
-	"log"
-	"os"
-	"strconv"
 	"strings"
 )
 
@@ -31,37 +27,20 @@ func countSlidingWindow(arr []int, period int) []int {
 		for j := i; j < i+period; j++ {
 			sum += arr[j]
 		}
-		log.Printf("Sum %d", sum)
 		result = append(result, sum)
-	}
-	return result
-}
-
-func parseInputAsInts(r io.Reader) []int {
-	result := make([]int, 0)
-	br := bufio.NewScanner(r)
-	for br.Scan() {
-
-		n, err := strconv.Atoi(br.Text())
-		if err != nil {
-			log.Fatal(err)
-		}
-		result = append(result, n)
 	}
 	return result
 }
 
 func main() {
 
-	fd, err := os.Open("day01.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
+	fd := util.OpenFile("day01.txt")
 	defer fd.Close()
-	measurements := parseInputAsInts(fd)
+	measurements := util.ParseInputAsInts(fd)
+	fmt.Println("Part 01")
 	fmt.Printf("increments %-4d\n", countIncrement(measurements))
-
 	fmt.Println(strings.Repeat("=", 80))
+	fmt.Println("Part 02")
 	fmt.Printf("Sliding increments %d\n", countIncrement(countSlidingWindow(measurements, 3)))
 
 }
