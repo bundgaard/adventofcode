@@ -1,16 +1,22 @@
 package util
 
-import "math"
+import (
+	"math"
+)
 
-func CountBitsInIntSlice(arr []int) map[int]int {
+type Value struct {
+	Bit int
+}
+
+func CountBitsInIntSlice(arr []Value) map[int]int {
 	result := make(map[int]int)
-	for _, bit := range arr {
-		result[bit]++
+	for _, value := range arr {
+		result[value.Bit]++
 	}
 	return result
 }
 
-func MostCommonBitIntSlice(arr []int) int {
+func MostCommonBitIntSlice(arr []Value) int {
 	result := CountBitsInIntSlice(arr)
 	currentMax := math.MinInt
 	maxBit := 0
@@ -23,7 +29,7 @@ func MostCommonBitIntSlice(arr []int) int {
 	return maxBit
 }
 
-func LeastCommonBitIntSlice(arr []int) int {
+func LeastCommonBitIntSlice(arr []Value) int {
 	result := CountBitsInIntSlice(arr)
 	currentMin := math.MaxInt
 	minBit := 0
