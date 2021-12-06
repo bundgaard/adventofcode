@@ -11,9 +11,11 @@ var doc = `3,4,3,1,2`
 func TestNewLanternEvery6Day(t *testing.T) {
 
 	// initial state
-	lanternSchool := util.ParseCommaSeparatedInputAsInts(strings.NewReader(doc))
+	lanternFish := util.ParseCommaSeparatedInputAsInts(strings.NewReader(doc))
 	// day 01
-	lanternSchool = simulate(80, lanternSchool)
-	t.Logf("Day 18: %d", len(lanternSchool))
+	school := loadSchool(lanternFish)
+	simulate(80, &school)
+
+	t.Logf("Day 18: %d sum %d", school, sumSchool(&school))
 
 }

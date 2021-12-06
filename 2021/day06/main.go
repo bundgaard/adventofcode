@@ -3,41 +3,49 @@ package main
 import (
 	"2021/util"
 	"log"
+	"strings"
 )
 
 func main() {
 	fd := util.OpenFile("day06.txt")
-	lanternFishSchool := util.ParseCommaSeparatedInputAsInts(fd)
-	lanternFishSchool = simulate(256, lanternFishSchool)
+	lanternFish := util.ParseCommaSeparatedInputAsInts(fd)
+	lanternFishSchool := loadSchool(lanternFish)
+	simulate(80, &lanternFishSchool)
 	log.Println("Part 01")
-	log.Printf("Total fish %d", len(lanternFishSchool))
-}
+	log.Printf("Total fish %d", sumSchool(&lanternFishSchool))
+	log.Println(strings.Repeat("=", 80))
+	lanternFishSchool = loadSchool(lanternFish)
+	simulate(256, &lanternFishSchool)
+	log.Printf("lantern fish after 256 days %d", sumSchool(&lanternFishSchool))
 
-func simulate(days int, school []int) []int {
+}
+func sumSchool(school *School) int {
+	result := 0
+	for _, val := range school {
+		result += val
+	}
+	return result
+}
+func loadSchool(school []int) (pool School) {
+	for _, fish := range school {
+		pool[fish]++
+	}
+	log.Printf("loadSchool %v", pool)
+	return
+}
+func simulate(days int, school *School) {
 	for i := 0; i < days; i++ {
-		school = spawnNewLanternFish(school)
+		spawnNewLanternFish(school)
 	}
-	return school
 }
-func spawnNewLanternFish(school []int) []int {
-	newFish := 0
-	for idx := range school {
-		lanternFish := school[idx]
 
-		if lanternFish == 0 {
-			newFish++
-		}
+type School [9]int
 
-		lanternFish = (lanternFish - 1)
-		if lanternFish < 0 {
-			lanternFish = 6
-		}
-		school[idx] = lanternFish
+func spawnNewLanternFish(school *School) {
+	breeding := school[0]
+	for i, fish := range school[1:] {
+		school[i] = fish
 	}
-
-	for i := newFish; i > 0; i-- {
-		school = append(school, 8)
-	}
-
-	return school
+	school[8] = breeding
+	school[6] += breeding
 }
