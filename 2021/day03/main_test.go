@@ -2,7 +2,6 @@ package main
 
 import (
 	"2021/util"
-	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -32,53 +31,6 @@ func TestPart01(t *testing.T) {
 	t.Log("ε * γ = ", ε*γ)
 }
 
-func TestPart02(t *testing.T) {
-	lines := util.ParseInput(strings.NewReader(doc))
-	cp := make([]string, len(lines))
-	copy(cp, lines)
-	oxygenBin := oxygenGeneratorRating(lines, 0)
-	co2Bin := CO2ScrubberRating(cp, 0)
-	oxygen, err := strconv.ParseInt(oxygenBin[0], 2, 64)
-	if err != nil {
-		t.Error(err)
-	}
-	co2, err := strconv.ParseInt(co2Bin[0], 2, 64)
-	if err != nil {
-		t.Error(err)
-	}
-	t.Logf("Result %v * %v = %d", oxygen, co2, oxygen*co2)
-	// filter on the most common bit in the first position
-
-}
-func calculatePositions(arr []string) map[int]map[byte]int {
-	counter := make(map[int]map[byte]int)
-	for x := 0; x < len(arr[0]); x++ {
-		coll := make(map[byte]int)
-		for y := 0; y < len(arr); y++ {
-			coll[arr[y][x]]++
-
-		}
-		counter[x] = coll
-	}
-	return counter
-}
-
-func recalculateCommons(in map[int]map[byte]int) (leastBits []byte, mostBits []byte) {
-	sortedArray := make([]int, 0)
-	for k := range in {
-		sortedArray = append(sortedArray, k)
-	}
-	sort.Ints(sortedArray)
-	mostBits = make([]byte, 0)
-	leastBits = make([]byte, 0)
-
-	for _, k := range sortedArray {
-		mostBits = append(mostBits, util.MaxMap(in[k])-'0')
-		leastBits = append(leastBits, util.MinMap(in[k])-'0')
-	}
-
-	return
-}
 func TestPart02A(t *testing.T) {
 	lines := util.ParseInput(util.OpenFile("/home/dbundgaard/code/adventofcode/2021/day03.txt"))
 	oxylines := make([]string, len(lines))
@@ -128,7 +80,7 @@ CO2Scrubber:
 			}
 			candidates := make([]string, 0)
 			if len(co2lines) <= 2 {
-				t.Logf("breaking at pos %d", pos)
+				t.Logf("breaking at pos %d; %d", pos, len(co2lines))
 				break CO2Scrubber
 			}
 			for _, line := range co2lines {
@@ -148,66 +100,5 @@ CO2Scrubber:
 
 }
 
-func baz(oxylines []string) []string {
-	return nil
-}
-
 var co2 int64
 var oxygen int64
-
-func foo(arr []string, pos int, co2Criteria bool) {
-	ones := 0
-	for _, elm := range arr {
-		if elm[pos] == '1' {
-			ones++
-		}
-	}
-	if len(arr) == 1 {
-		if co2Criteria {
-			co2, _ = strconv.ParseInt(arr[0], 2, 64)
-		} else {
-			oxygen, _ = strconv.ParseInt(arr[0], 2, 64)
-		}
-		return
-	} else {
-		output := make([]string, 0)
-		if ones >= len(arr)/2 {
-			for _, elm := range arr {
-				if co2Criteria {
-					if elm[pos] == '1' {
-						output = append(output, elm)
-					}
-				} else {
-					if elm[pos] == '0' {
-						output = append(output, elm)
-					}
-				}
-
-			}
-		} else {
-			for _, elm := range arr {
-				if co2Criteria {
-					if elm[pos] == '0' {
-						output = append(output, elm)
-					}
-				} else {
-					if elm[pos] == '1' {
-						output = append(output, elm)
-					}
-				}
-
-			}
-		}
-
-		foo(output, pos+1, co2Criteria)
-	}
-
-}
-
-func TestManual(t *testing.T) {
-	oxygen, _ := strconv.ParseInt("101001001011", 2, 64)
-	co2, _ := strconv.ParseInt("010110110101", 2, 64)
-
-	t.Logf("%d %d = %d", oxygen, co2, oxygen*co2)
-
-}
