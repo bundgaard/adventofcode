@@ -20,7 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 	var marker [100][5][5]bool
-
+	winningBoards := make(map[int]int)
 BingoLoop:
 	for _, n := range drawNumbers {
 		for idx := range boards[0] {
@@ -33,10 +33,13 @@ BingoLoop:
 					if checkRow(marker[boardIdx]) {
 						log.Printf("Board %d won with with full row. Winning #%d", boardIdx+1, n)
 						log.Printf("Sum %d", calculateSumUnmarked(boards[boardIdx], marker[boardIdx], n))
-						break BingoLoop
+						winningBoards[boardIdx]++
 					} else if checkColumn(marker[boardIdx]) {
 						log.Printf("Board %d won with with full column. Winning #%d", boardIdx+1, n)
 						log.Printf("Sum %d", calculateSumUnmarked(boards[boardIdx], marker[boardIdx], n))
+						winningBoards[boardIdx]++
+					}
+					if len(winningBoards) == 100 {
 						break BingoLoop
 					}
 				}

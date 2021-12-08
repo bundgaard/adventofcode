@@ -3,7 +3,6 @@ package main
 import (
 	"2021/util"
 	"bufio"
-	"sort"
 	"strings"
 	"testing"
 )
@@ -36,13 +35,14 @@ func TestPart01(t *testing.T) {
 		t.Error(err)
 	}
 	drawNumbers := util.ParseCommaSeparatedInputAsInts(strings.NewReader(line))
-	
+
 	boards, err := readBoards(br, 5, 3)
 	if err != nil {
 		t.Error(err)
 	}
 	var marker [3][5][5]bool
-
+	var winners [3]bool
+	_ = winners
 BingoLoop:
 	for _, n := range drawNumbers {
 		for idx := range boards[0] {
@@ -55,7 +55,7 @@ BingoLoop:
 					if checkRow(marker[boardIdx]) {
 						t.Logf("Board %d won with with full row. Winning #%d", boardIdx+1, n)
 						t.Logf("Sum %d", calculateSumUnmarked(boards[boardIdx], marker[boardIdx], n))
-						break BingoLoop
+
 					} else if checkColumn(marker[boardIdx]) {
 						t.Logf("Board %d won with with full column. Winning #%d", boardIdx+1, n)
 						t.Logf("Sum %d", calculateSumUnmarked(boards[boardIdx], marker[boardIdx], n))
