@@ -1,8 +1,6 @@
 package main
 
 import (
-	"2021/util"
-	"bufio"
 	"strings"
 	"testing"
 )
@@ -21,32 +19,15 @@ var doc = `0,9 -> 5,9
 
 func TestPart01(t *testing.T) {
 
-	br := bufio.NewScanner(strings.NewReader(doc))
-
-	paths := make(map[int]int)
-	for br.Scan() {
-		line := br.Text()
-		segment := parseLineSegment(line)
-		t.Logf("Segment %v", segment)
-	}
-
-}
-
-type xy struct {
-	X int
-	Y int
-}
-type segment struct {
-	Begin xy
-	End   xy
-}
-
-func parseLineSegment(str string) *segment {
-	fields := strings.Fields(str)
-	begin := util.ParseCommaSeparatedInputAsInts(strings.NewReader(fields[0]))
-	end := util.ParseCommaSeparatedInputAsInts(strings.NewReader(fields[2]))
-	return &segment{
-		Begin: xy{X: begin[0], Y: begin[1]},
-		End:   xy{X: end[0], Y: end[1]},
+	r := strings.NewReader(doc)
+	segments := createSegments(r)
+	xMax, yMax := findSizeOfMap(segments)
+	sketch := createDangerousMap(xMax, yMax)
+	lookForDangerousAreas(segments, sketch, true)
+	sum := calculateDangerousAreas(sketch)
+	expected := 12
+	displayDangerousAreas(sketch)
+	if sum != expected {
+		t.Errorf("expected %d got %d", expected, sum)
 	}
 }
