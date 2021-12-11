@@ -32,3 +32,7 @@ func MinMap(in map[byte]int) byte {
 	}
 	return 1
 }
+
+func MinMax(max, min int) int {
+	return Max(max, Min(max, min))
+}
