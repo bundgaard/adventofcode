@@ -4,7 +4,7 @@ import (
 	"2021/util"
 	"bufio"
 	"log"
-	"strings"
+	"sort"
 )
 
 var points = map[int32]int{')': 3, ']': 57, '}': 1197, '>': 25137}
@@ -45,8 +45,8 @@ func part01() {
 	log.Printf("Navigational corruptions %d %q total=%d", len(corruptions), corruptions, total)
 }
 func main() {
-
-	br := bufio.NewScanner(strings.NewReader("[({(<(())[]>[[{[]{<()<>>"))
+	fd := util.OpenFile("day10.txt")
+	br := bufio.NewScanner(fd)
 
 	incompletes := make([]string, 0)
 	for br.Scan() {
@@ -66,8 +66,16 @@ func main() {
 
 	log.Printf("Closers %q", closers)
 
-	total := calculateAutocomplete(closers[0])
-	log.Printf("Part02 Total %d", total)
+	totals := make([]int, 0)
+	for _, closer := range closers {
+		totals = append(totals, calculateAutocomplete(closer))
+	}
+
+	sort.Ints(totals)
+	log.Printf("sorted totals %v", totals)
+	middle := len(totals) / 2
+
+	log.Printf("Part02 Total %d", totals[middle])
 
 }
 
@@ -111,11 +119,10 @@ func countClosing(line string) []int32 {
 			level--
 		}
 	}
-
-	for _, open := range queue {
+	for i := len(queue) - 1; i > -1; i-- {
+		open := queue[i]
 		missing = append(missing, pairs[open])
 	}
-	log.Printf("not closed %q", queue)
 	return missing
 }
 func findIncompleteLine(line string) (string, bool) {
